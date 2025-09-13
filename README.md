@@ -6,7 +6,97 @@ I am continuing that [adventure](https://leadevelop.net/blog/monitor-unreal-proj
 Custom tags has been confirmed working, but the plugin creation including that source code will be my first Plugin journey from ground up in UE world. I'll be on in coming weekends and see how far I get.
 Until you don't see release version in the repository, the plugin is not functional. Stay tuned 🤓 and feel free to reach out in Discord - LeaDevelop. I'm probably listening to music and reading up [Plugins](https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine) docs at the moment.
 
-</br>
-</br>
-
 >The use of code, scripts or shared content is solely at your own risk. I do not guarantee its accuracy, reliability, or suitability for your specific needs. No responsibility is taken for any damages or losses that may result from its use. It is recommended that you carefully review and test the content before implementation!
+
+Current work in progress:
+# LeaDevelop Sentry plugin overrides
+
+This plugin extends and overrides the default Sentry plugin configuration for Unreal Engine projects, providing enhanced crash reporting and analytics capabilities with custom LeaDevelop features.
+
+## Features
+
+- **Enhanced Tag Promotion**: Automatically promotes changelist, engine version, and level name information to Sentry tags
+- **Advanced Level Name Formatting**: Cleans up PIE prefixes and provides user-friendly level names
+- **World Context Tracking**: Tracks whether you're in Editor, PIE, or Game mode
+- **Automatic Breadcrumb Tracking**: Enhanced breadcrumbs for map loading events
+- **Configurable Overrides**: Easy-to-configure settings that override Sentry defaults
+
+## Installation
+
+1. Place the plugin folder in your project's `Plugins` directory
+2. Regenerate project files
+3. Build your project
+4. Enable the plugin in your project's `.uproject` file or through the Plugin Manager
+
+## Plugin Structure
+
+```
+Plugins\LeaDevelopSentry\
+├── LeaDevelopSentry.uplugin                      # Plugin descriptor
+├── Source\
+│   └── LeaDevelopSentry\
+│       ├── LeaDevelopSentry.Build.cs             # Build configuration
+│       ├── Public\
+│       │   ├── SentryOverrideModule.h            # Main module header
+│       │   ├── SentryOverrideConfig.h            # Configuration class header
+│       │   └── SentryOverrideSubsystem.h         # Subsystem header
+│       └── Private\
+│           ├── SentryOverrideModule.cpp          # Main module implementation
+│           ├── SentryOverrideConfig.cpp          # Configuration class implementation
+│           └── SentryOverrideSubsystem.cpp       # Subsystem implementation
+```
+
+## Configuration
+
+The plugin can be configured through the `USentryOverrideConfig` class. Key settings include:
+
+- `bEnableOverrides`: Master switch for all overrides
+- `bForceEnableChangelistTag`: Force enable changelist in tags
+- `bForceEnableEngineVersionTag`: Force enable engine version in tags
+- `bForceEnableLevelNameTag`: Force enable level name tracking
+- `OverrideMaxBreadcrumbs`: Override maximum breadcrumb count
+- `CustomPiePrefixes`: Additional PIE prefixes to clean from level names
+- `LevelNameMappings`: Custom mappings for level names
+
+## Enhanced Features
+
+### Level Name Formatting
+
+The plugin automatically formats level names by:
+- Removing PIE prefixes (UEDPIE_0_, UEDPIE_1_, etc.)
+- Stripping common path prefixes (/Game/, /Engine/)
+- Removing file extensions and suffixes
+- Applying custom name mappings
+
+### World Context Tracking
+
+Automatically sets tags for:
+- `LevelName`: Clean, formatted level name
+- `WorldContext`: Editor/PIE/Game/Loading/Failed
+
+### Automatic Breadcrumbs
+
+Enhanced breadcrumb tracking for:
+- PreLoadMap events with formatted names
+- PostLoadMapWithWorld events with context
+- World initialization with change detection
+
+## Dependencies
+
+- Sentry plugin (automatically loaded)
+- Core Unreal Engine modules (Core, CoreUObject, Engine)
+
+## Usage Notes
+
+1. The plugin automatically applies overrides on startup
+2. It respects the original Sentry plugin's configuration while enhancing it
+3. All overrides are applied after the Sentry plugin initializes
+4. Level name formatting preserves your custom mappings and prefixes
+
+## Troubleshooting
+
+- Ensure the Sentry plugin is enabled before this plugin loads
+- Check logs for "LeaDevelopSentry" entries to verify initialization
+- Verify that your DSN is properly configured in the base Sentry plugin settings
+
+The plugin is designed to be easily extensible for additional Sentry customizations specific to project needs.
