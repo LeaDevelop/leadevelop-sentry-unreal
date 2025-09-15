@@ -92,3 +92,6 @@ Enhanced breadcrumb tracking for:
 - Verify that your DSN is properly configured in the base Sentry plugin settings
 
 The plugin is designed to be easily extensible for additional Sentry customizations specific to project needs.
+
+# Unreal Plugin docs
+https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine
