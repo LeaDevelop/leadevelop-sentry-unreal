@@ -45,9 +45,12 @@ Plugins\LeaDevelopSentry\
 │           ├── LeaDevelopSentryModule.cpp         # Main module implementationConfiguration class implementation
 │           └── LeaDevelopSentrySettings.cpp       # Configuration
 ```
+<img width="631" height="108" alt="LeaDevelop_sentry-custom-tags" src="https://github.com/user-attachments/assets/f663372c-9e14-4087-ac00-ffca4d01e4de" />
 
+<img width="1288" height="140" alt="15-09-2025-030525-Lea" src="https://github.com/user-attachments/assets/6f56fd0c-4748-4655-b1d5-25244b430795" />
 
 ## Enhanced Features
+
 
 ### Level Name Formatting
 
