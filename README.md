@@ -1,4 +1,4 @@
-# LeaDevelop sentry-unreal enhancements
+# LeaDevelop sentry-unreal enhancements - UE plugin
 
 Early summer 2025 I was exploring source of Sentry unreal plugin and I started adding custom tags to my self-hosted instance where I'm experimenting and prototyping different options. 
 I am continuing that [adventure](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/) and am at the point of creating custom plugin. This will make updates between official Sentry plugin and own easier and makes it easier for anybody else to pick it up as well.
