@@ -93,5 +93,8 @@ Enhanced breadcrumb tracking for:
 
 The plugin is designed to be easily extensible for additional Sentry customizations specific to project needs.
 
-# Unreal Plugin docs
+## Unreal Plugin docs
 https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine
+
+## Sentry docs
+https://docs.sentry.io/platforms/unreal
