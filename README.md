@@ -37,26 +37,15 @@ Plugins\LeaDevelopSentry\
 │   └── LeaDevelopSentry\
 │       ├── LeaDevelopSentry.Build.cs             # Build configuration
 │       ├── Public\
-│       │   ├── SentryOverrideModule.h            # Main module header
-│       │   ├── SentryOverrideConfig.h            # Configuration class header
-│       │   └── SentryOverrideSubsystem.h         # Subsystem header
+│       │   ├── LeaDevelopSentryModule.h          # Main module header
+│       │   ├── LeaDevelopSentrySettings.h        # Configuration class header
+│       │   └── LeaDevelopBeforeSendHandler.h     # Filter event before sending header
 │       └── Private\
-│           ├── SentryOverrideModule.cpp          # Main module implementation
-│           ├── SentryOverrideConfig.cpp          # Configuration class implementation
-│           └── SentryOverrideSubsystem.cpp       # Subsystem implementation
+│           ├── LeaDevelopBeforeSendHandler.cpp    # Filter event before sending
+│           ├── LeaDevelopSentryModule.cpp         # Main module implementationConfiguration class implementation
+│           └── LeaDevelopSentrySettings.cpp       # Configuration
 ```
 
-## Configuration
-
-The plugin can be configured through the `USentryOverrideConfig` class. Key settings include:
-
-- `bEnableOverrides`: Master switch for all overrides
-- `bForceEnableChangelistTag`: Force enable changelist in tags
-- `bForceEnableEngineVersionTag`: Force enable engine version in tags
-- `bForceEnableLevelNameTag`: Force enable level name tracking
-- `OverrideMaxBreadcrumbs`: Override maximum breadcrumb count
-- `CustomPiePrefixes`: Additional PIE prefixes to clean from level names
-- `LevelNameMappings`: Custom mappings for level names
 
 ## Enhanced Features
 
