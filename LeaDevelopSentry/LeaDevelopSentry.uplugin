@@ -1,24 +1,41 @@
 ﻿{
-  "EngineVersion" : "5.6.0",
+  "EngineVersion": "5.6.0",
   "FileVersion": 3,
   "Version": 1,
-  "VersionName": "0.0.5",
-  "FriendlyName": "LeaDevelop Sentry Override",
+  "VersionName": "1.1.0",
+  "FriendlyName": "LeaDevelop Sentry Extensions",
   "Description": "LeaDevelop custom overrides for sentry-unreal implementation",
   "Category": "Code Plugins",
-  "CreatedBy": "Lea Nemec",
-  "CreatedByURL": "https://www.leadevelop.net",
+  "CreatedBy": "LeaDevelop",
+  "CreatedByURL": "https://leadevelop.com",
   "DocsURL": "TBA",
   "MarketplaceURL": "",
+  "SupportURL": "TBA",
   "CanContainContent": false,
-  "IsBetaVersion": true,
+  "IsBetaVersion": false,
   "IsExperimentalVersion": false,
   "Installed": false,
+  "RequiresBuildPlatform": false,
+  "SupportedTargetPlatforms": [
+    "Win64"
+  ],
+  "SupportedPrograms": [
+    "UnrealBuildTool",
+    "UnrealHeaderTool"
+  ],
   "Modules": [
     {
       "Name": "LeaDevelopSentry",
       "Type": "Runtime",
-      "LoadingPhase": "PostEngineInit"
+      "LoadingPhase": "PostEngineInit",
+      "AdditionalDependencies": [
+        "Engine",
+        "Core",
+        "CoreUObject"
+      ],
+      "PlatformAllowList": [
+        "Win64"
+      ]
     }
   ],
   "Plugins": [
@@ -26,6 +43,12 @@
       "Name": "Sentry",
       "Enabled": true,
       "Optional": false
+    }
+  ],
+  "LocalizationTargets": [
+    {
+      "Name": "LeaDevelopSentry",
+      "LoadingPolicy": "Always"
     }
   ]
 }
