@@ -9,11 +9,11 @@
 
 USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USentryEvent* Event, USentryHint* Hint)
 {
-    UE_LOG(LogTemp, Error, TEXT("=== BeforeSend Handler Called ==="));
+    // UE_LOG(LogTemp, Error, TEXT("=== BeforeSend Handler Called ==="));
     
     if (!Event) 
     {
-        UE_LOG(LogTemp, Error, TEXT("Event is null!"));
+        UE_LOG(LogTemp, Warning, TEXT("Event is null!"));
         return Event;
     }
 
@@ -24,8 +24,6 @@ USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USen
         UE_LOG(LogTemp, Error, TEXT("Settings is null!"));
         return Event;
     }
-
-    UE_LOG(LogTemp, Warning, TEXT("Adding custom tags..."));
 
     // Add custom tags based on settings
     if (Settings->bPromoteChangelist)
@@ -69,7 +67,7 @@ USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USen
         UE_LOG(LogTemp, Warning, TEXT("Tag: %s = %s"), *Tag.Key, *Tag.Value);
     }
     
-    UE_LOG(LogTemp, Error, TEXT("=== BeforeSend Handler Complete ==="));
+    // UE_LOG(LogTemp, Error, TEXT("=== BeforeSend Handler Complete ==="));
     
     return Event;
 }

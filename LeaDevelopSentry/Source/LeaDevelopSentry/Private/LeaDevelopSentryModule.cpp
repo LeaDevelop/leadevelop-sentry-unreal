@@ -15,7 +15,7 @@
 
 void FLeaDevelopSentryModule::StartupModule()
 {
-    UE_LOG(LogTemp, Warning, TEXT("LeaDevelopSentry module starting up"));
+    //UE_LOG(LogTemp, Warning, TEXT("LeaDevelopSentry module starting up"));
     
     // Auto-configure Sentry to use our handler
     if (USentrySettings* SentrySettings = GetMutableDefault<USentrySettings>())
@@ -68,7 +68,7 @@ void FLeaDevelopSentryModule::ShutdownModule()
     {
         FCoreDelegates::GameStateClassChanged.Remove(GameStateDelegate);
     }
-    UE_LOG(LogTemp, Log, TEXT("LeaDevelopSentry module shutting down"));
+    //UE_LOG(LogTemp, Log, TEXT("LeaDevelopSentry module shutting down"));
 }
 
 #undef LOCTEXT_NAMESPACE

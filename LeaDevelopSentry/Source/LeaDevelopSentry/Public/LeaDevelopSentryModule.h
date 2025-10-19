@@ -12,6 +12,5 @@ public:
 	virtual void ShutdownModule() override;
 	
 private:
-	//void TestSentryIntegration();
 	FDelegateHandle GameStateDelegate;
 };
