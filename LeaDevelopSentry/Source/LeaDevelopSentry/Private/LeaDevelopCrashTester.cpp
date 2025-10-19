@@ -12,6 +12,7 @@ int32 FLeaDevelopCrashTester::CrashType = 0;
 
 void FLeaDevelopCrashTester::InitializeFromCommandLine()
 {
+// TODO introduce WITH_SENTRY_TESTING
 #if !UE_BUILD_SHIPPING
    FString CrashMeValue;
    if (FParse::Value(FCommandLine::Get(), TEXT("CrashMe="), CrashMeValue))
