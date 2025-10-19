@@ -16,18 +16,18 @@ This plugin extends and overrides the default Sentry plugin configuration for Un
 ## Features
 
 - **Enhanced Tag Promotion**: Automatically promotes changelist, engine version, and level name information to Sentry tags
-- **Advanced Level Name Formatting**: Cleans up PIE prefixes and provides user-friendly level names
-- **World Context Tracking**: Tracks whether you're in Editor, PIE, or Game mode
+  - unpublished tags in this project but sharing for awareness and ideas you can incorporate into your own projects: steam id, player nicknames both for steam and EGS, including any capturing nicknames in early development via different approaches depending on studio setup. Enables engineers searching for crashes by human readable names. World Context Tracking: Tags if UE developer crashed in Editor, PIE, or Game mode (currently disabled it)
 - **Automatic Breadcrumb Tracking**: Enhanced breadcrumbs for map loading events
 - **Configurable Overrides**: Easy-to-configure settings that override Sentry defaults
 
 ## Installation
 
 1. Place the plugin folder in your project's `Plugins` directory
-2. Regenerate project files
-3. Build your project
-4. Enable the plugin in your project's `.uproject` file or through the Plugin Manager
-
+2. Enable the plugin in your project's `.uproject` file or through the Plugin Manager
+3. Update GameInstance.cpp
+4. Regenerate project files
+5. Build your project
+   
 ## Plugin Structure
 
 ```
@@ -42,8 +42,8 @@ Plugins\LeaDevelopSentry\
 │       │   └── LeaDevelopBeforeSendHandler.h     # Filter event before sending header
 │       └── Private\
 │           ├── LeaDevelopBeforeSendHandler.cpp    # Filter event before sending
-│           ├── LeaDevelopSentryModule.cpp         # Main module implementationConfiguration class implementation
-│           └── LeaDevelopSentrySettings.cpp       # Configuration
+│           ├── LeaDevelopSentryModule.cpp         # Main module implementation
+│           └── LeaDevelopSentrySettings.cpp       # Configuration class
 ```
 <img width="631" height="108" alt="LeaDevelop_sentry-custom-tags" src="https://github.com/user-attachments/assets/f663372c-9e14-4087-ac00-ffca4d01e4de" />
 
@@ -51,20 +51,12 @@ Plugins\LeaDevelopSentry\
 
 ## Enhanced Features
 
-
-### Level Name Formatting
-
-The plugin automatically formats level names by:
-- Removing PIE prefixes (UEDPIE_0_, UEDPIE_1_, etc.)
-- Stripping common path prefixes (/Game/, /Engine/)
-- Removing file extensions and suffixes
-- Applying custom name mappings
-
-### World Context Tracking
+### Tag tracking
 
 Automatically sets tags for:
-- `LevelName`: Clean, formatted level name
-- `WorldContext`: Editor/PIE/Game/Loading/Failed
+- Level Name aka Map: Lvl_Default
+- Changelist: 123456
+- Engine Version: 5.6.1
 
 ### Automatic Breadcrumbs
 
