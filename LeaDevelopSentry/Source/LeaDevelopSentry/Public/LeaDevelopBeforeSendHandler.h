@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
+
+#pragma once
 #include "CoreMinimal.h"
 #include "SentryBeforeSendHandler.h"
 #include "LeaDevelopBeforeSendHandler.generated.h"
