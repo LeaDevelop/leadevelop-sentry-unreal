@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
-// TODO still needs to be connected
 
 #include "LeaDevelopCrashTester.h"
+#include "LeaDevelopSentryLog.h"
 #include "Async/Async.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
@@ -21,7 +21,7 @@ void FLeaDevelopCrashTester::InitializeFromCommandLine()
        
       if (DelaySeconds > 0)
       {
-         UE_LOG(LogTemp, Warning, TEXT("LeaDevelop: Crash test scheduled in %d seconds"), DelaySeconds);
+         UE_LOG(LogLeaDevelopSentry, Warning, TEXT("LeaDevelop: Crash test scheduled in %d seconds"), DelaySeconds);
           
          AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [DelaySeconds]()
          {

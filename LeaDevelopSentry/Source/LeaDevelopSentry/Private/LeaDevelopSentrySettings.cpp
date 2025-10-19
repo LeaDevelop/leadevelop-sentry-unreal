@@ -1,4 +1,5 @@
-﻿#include "LeaDevelopSentrySettings.h"
+﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
+#include "LeaDevelopSentrySettings.h"
 #include "SentrySubsystem.h"
 #include "Misc/EngineVersion.h"
 #include "Engine/Engine.h"

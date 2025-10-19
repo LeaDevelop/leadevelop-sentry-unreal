@@ -1,4 +1,7 @@
-﻿#include "LeaDevelopBeforeSendHandler.h"
+﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
+
+#include "LeaDevelopBeforeSendHandler.h"
+#include "LeaDevelopSentryLog.h"
 #include "SentryEvent.h"
 #include "SentryHint.h"
 #include "SentrySubsystem.h"
@@ -9,11 +12,11 @@
 
 USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USentryEvent* Event, USentryHint* Hint)
 {
-    // UE_LOG(LogTemp, Error, TEXT("=== BeforeSend Handler Called ==="));
+    // UE_LOG(LogLeaDevelopSentry, Error, TEXT("=== BeforeSend Handler Called ==="));
     
     if (!Event) 
     {
-        UE_LOG(LogTemp, Warning, TEXT("Event is null!"));
+        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Event is null!"));
         return Event;
     }
 
@@ -21,7 +24,7 @@ USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USen
     const ULeaDevelopSentrySettings* Settings = GetDefault<ULeaDevelopSentrySettings>();
     if (!Settings) 
     {
-        UE_LOG(LogTemp, Error, TEXT("Settings is null!"));
+        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Settings is null!"));
         return Event;
     }
 
@@ -30,14 +33,14 @@ USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USen
     {
         FString Changelist = FString::FromInt(FEngineVersion::Current().GetChangelist());
         Event->SetTag(TEXT("Changelist"), Changelist);
-        UE_LOG(LogTemp, Warning, TEXT("Added changelist tag: %s"), *Changelist);
+        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Added changelist tag: %s"), *Changelist);
     }
     
     if (Settings->bPromoteEngineVersion)
     {
         FString EngineVersion = FEngineVersion::Current().ToString(EVersionComponent::Patch);
         Event->SetTag(TEXT("EngineVersion"), EngineVersion);
-        UE_LOG(LogTemp, Warning, TEXT("Added engine version tag: %s"), *EngineVersion);
+        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Added engine version tag: %s"), *EngineVersion);
     }
     
     if (Settings->bPromoteLevelName)
@@ -47,7 +50,7 @@ USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USen
             FString LevelName = GWorld->GetMapName();
             LevelName.RemoveFromStart(GWorld->StreamingLevelsPrefix);
             Event->SetTag(TEXT("LevelName"), LevelName);
-            UE_LOG(LogTemp, Warning, TEXT("Added level tag: %s"), *LevelName);
+            UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Added level tag: %s"), *LevelName);
         }
     }
 
@@ -56,18 +59,18 @@ USentryEvent* ULeaDevelopBeforeSendHandler::HandleBeforeSend_Implementation(USen
     if (Sentry && Sentry->IsEnabled())
     {
         Settings->ApplyCustomTags(Sentry);
-        UE_LOG(LogTemp, Warning, TEXT("Applied global tags for crashes"));
+        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Applied global tags for crashes"));
     }
     
     // Get current tags and log them
     TMap<FString, FString> CurrentTags = Event->GetTags();
-    UE_LOG(LogTemp, Warning, TEXT("Event now has %d tags"), CurrentTags.Num());
+    UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Event now has %d tags"), CurrentTags.Num());
     for (const auto& Tag : CurrentTags)
     {
-        UE_LOG(LogTemp, Warning, TEXT("Tag: %s = %s"), *Tag.Key, *Tag.Value);
+        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Tag: %s = %s"), *Tag.Key, *Tag.Value);
     }
     
-    // UE_LOG(LogTemp, Error, TEXT("=== BeforeSend Handler Complete ==="));
+    // UE_LOG(LogLeaDevelopSentry, Error, TEXT("=== BeforeSend Handler Complete ==="));
     
     return Event;
 }
