@@ -1,6 +1,7 @@
 ﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
 
 #include "LeaDevelopSentryModule.h"
+#include "LeaDevelopSentryLog.h"
 #include "SentrySettings.h"
 #include "SentrySubsystem.h"
 #include "LeaDevelopBeforeSendHandler.h"
@@ -15,14 +16,14 @@
 
 void FLeaDevelopSentryModule::StartupModule()
 {
-    UE_LOG(LogTemp, Warning, TEXT("LeaDevelopSentry module starting up"));
+    //UE_LOG(LogLeaDevelopSentry, Warning, TEXT("LeaDevelopSentry module starting up"));
     
     // Auto-configure Sentry to use our handler
     if (USentrySettings* SentrySettings = GetMutableDefault<USentrySettings>())
     {
         SentrySettings->BeforeSendHandler = ULeaDevelopBeforeSendHandler::StaticClass();
         SentrySettings->SaveConfig();
-        UE_LOG(LogTemp, Warning, TEXT("Set BeforeSend handler: %s"), 
+        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Set BeforeSend handler: %s"), 
             SentrySettings->BeforeSendHandler ? TEXT("SUCCESS") : TEXT("FAILED"));
     }
     
@@ -41,7 +42,7 @@ void FLeaDevelopSentryModule::StartupModule()
             if (Settings)
             {
                 Settings->ApplyCustomTags(Sentry);
-                UE_LOG(LogTemp, Warning, TEXT("Applied startup global tags"));
+                UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Applied startup global tags"));
             }
         }
     });
@@ -68,7 +69,7 @@ void FLeaDevelopSentryModule::ShutdownModule()
     {
         FCoreDelegates::GameStateClassChanged.Remove(GameStateDelegate);
     }
-    UE_LOG(LogTemp, Log, TEXT("LeaDevelopSentry module shutting down"));
+    //UE_LOG(LogLeaDevelopSentry, Log, TEXT("LeaDevelopSentry module shutting down"));
 }
 
 #undef LOCTEXT_NAMESPACE

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
-// TODO still needs to be connected
 
 #include "LeaDevelopCrashTester.h"
+#include "LeaDevelopSentryLog.h"
 #include "Async/Async.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
@@ -12,6 +12,7 @@ int32 FLeaDevelopCrashTester::CrashType = 0;
 
 void FLeaDevelopCrashTester::InitializeFromCommandLine()
 {
+// TODO introduce WITH_SENTRY_TESTING
 #if !UE_BUILD_SHIPPING
    FString CrashMeValue;
    if (FParse::Value(FCommandLine::Get(), TEXT("CrashMe="), CrashMeValue))
@@ -20,7 +21,7 @@ void FLeaDevelopCrashTester::InitializeFromCommandLine()
        
       if (DelaySeconds > 0)
       {
-         UE_LOG(LogTemp, Warning, TEXT("LeaDevelop: Crash test scheduled in %d seconds"), DelaySeconds);
+         UE_LOG(LogLeaDevelopSentry, Warning, TEXT("LeaDevelop: Crash test scheduled in %d seconds"), DelaySeconds);
           
          AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [DelaySeconds]()
          {
