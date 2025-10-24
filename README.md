@@ -1,12 +1,6 @@
 # LeaDevelop sentry-unreal enhancements - UE plugin
 
-Early summer 2025 I was exploring the source of the Sentry Unreal plugin and started adding custom tags to my self-hosted instance where I'm experimenting and prototyping different options.
-
-I am continuing that [adventure](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/) and am at the point of creating a custom plugin. This will make updates between the official Sentry plugin and my own easier and makes it easier for anybody else to pick it up as well.
-
-Custom tags have been confirmed working, and the plugin creation including that source code will be my first Plugin journey from the ground up in the UE world. I'll be on in coming weekends to see how far I get.
-
-Until you see a release version in the repository, the plugin is not functional. Stay tuned 🤓 and feel free to reach out on Discord - LeaDevelop. I'm probably listening to music and reading up on [Plugins](https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine) docs at the moment.
+During summer 2025 I was exploring the source of the Sentry Unreal plugin and started adding custom tags to my self-hosted instance where I'm experimenting and prototyping different options. I started by editing a Sentry's subsystem but the more I changed, the more I realized this is not ideal for maintenance, which is what lead to creating own plugin.
 
 > **Disclaimer**: The use of code, scripts, or shared content is solely at your own risk. I do not guarantee its accuracy, reliability, or suitability for your specific needs. No responsibility is taken for any damages or losses that may result from its use. It is recommended that you carefully review and test the content before implementation!
 
@@ -27,14 +21,14 @@ This plugin extends the default Sentry plugin for Unreal Engine projects, provid
 
 ## Requirements
 
-- Unreal Engine 5.6.1 or later
+- Unreal Engine 5.6.1 or later (high chance it works with 5.5 didn't have time to validate yet, try at your own risk!)
 - Sentry Unreal Engine SDK plugin (available on Epic Marketplace)
 - Windows 64-bit (additional platforms can be configured)
 
 ## Installation
 
 ### 1. Install the Plugin Files
-1. Download and extract the plugin package (R1.0.0 on the way 😉)
+1. Download and extract the plugin package
 2. Copy the `LeaDevelopSentry` folder to your project's `Plugins` directory
     - If the `Plugins` folder doesn't exist, create it in your project root
     - Path should be: `YourProject/Plugins/LeaDevelopSentry/`
@@ -291,7 +285,7 @@ The plugin is designed to be easily extensible for additional Sentry customizati
 
 - **Unreal Plugin Documentation**: https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine
 - **Sentry Unreal Documentation**: https://docs.sentry.io/platforms/unreal
-- **Blog Post**: [Monitor Unreal Projects in Sentry](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/) - will be updated soon ™️
+- **Blog Post**: [Monitor Unreal Projects in Sentry](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/)
 
 ## License
 
