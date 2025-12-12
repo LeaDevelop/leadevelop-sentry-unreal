@@ -29,7 +29,8 @@ void FLeaDevelopSentryModule::StartupModule()
     
     // Initialize crash tester
     FLeaDevelopCrashTester::InitializeFromCommandLine();
-    
+
+    // TODO Follow best UE conventions and delegates, this option is not optimal
     // Set global tags early for crashes using AsyncTask
     AsyncTask(ENamedThreads::GameThread, []()
     {
