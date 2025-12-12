@@ -9,6 +9,8 @@ During summer 2025 I was exploring the source of the Sentry Unreal plugin and st
 # LeaDevelop Sentry Plugin Enhancements
 
 This plugin extends the default Sentry plugin for Unreal Engine projects, providing enhanced crash reporting and analytics capabilities with custom LeaDevelop features.
+Update to latest sentry unreal plugin version expected in second half of January, unless I get one of my weekends freed up :)
+TODOs are noting what I'll improve next or what to keep an eye on.
 
 ## Features
 
