@@ -12,6 +12,7 @@ Current work in progress:
 # LeaDevelop Sentry plugin overrides
 
 This plugin extends and overrides the default Sentry plugin configuration for Unreal Engine projects, providing enhanced crash reporting and analytics capabilities with custom LeaDevelop features.
+I'll update to latest sentry unreal version in second half of January 2026, unless one of my weekends frees up.
 
 ## Features
 
