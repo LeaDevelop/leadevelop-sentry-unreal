@@ -25,7 +25,7 @@ I'll update to latest sentry unreal version in second half of January 2026, unle
 
 1. Place the plugin folder in your project's `Plugins` directory
 2. Enable the plugin in your project's `.uproject` file or through the Plugin Manager
-3. Update GameInstance.cpp
+3. Update GameInstance.cpp or skip this part if you use auto enabling of SDK (official docs will clarify this one for you)
 4. Regenerate project files
 5. Build your project
    
