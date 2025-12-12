@@ -34,7 +34,9 @@ This plugin extends the default Sentry plugin for Unreal Engine projects, provid
     - Path should be: `YourProject/Plugins/LeaDevelopSentry/`
 3. **Do NOT enable the plugin yet**
 
-### 2. Configure Your Game Instance
+### 2. Configure Your Game Instance or use auto enable SDK option
+
+You have to choose which way you'll use it. I advise reading through official documentaition and you try things around.
 
 You need to set up the Sentry integration in your project's GameInstance class **before enabling the plugin**.
 
