@@ -33,7 +33,7 @@ TODOs are noting what I'll improve next or what to keep an eye on.
 - Sentry Unreal Engine SDK plugin (available on Epic Marketplace)
 - Windows 64-bit (additional platforms can be configured)
 
-## Installation
+## Installation (this flow changes in release version that is on the way in next days)
 
 ### 1. Install the Plugin Files
 1. Download and extract the plugin package
