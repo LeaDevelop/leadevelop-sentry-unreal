@@ -1,3 +1,9 @@
+**Status update** 
+- release version on the way for unreal crash reporter, currently tests on 5.6.1 passed and will also test on 5.7.1. 
+  - If there is any interest either expressed directly or via stars I'll continue expand else I'll public archive the version after March 2026.
+- pre-release versions are functional but not optimal. Initial development focused on getting it working and me getting better understanding; future versions will follow UE conventions better 🤞🤓
+
+
 # LeaDevelop sentry-unreal enhancements - UE plugin
 
 During summer 2025 I was exploring the source of the Sentry Unreal plugin and started adding custom tags to my self-hosted instance where I'm experimenting and prototyping different options. I started by editing a Sentry's subsystem but the more I changed, the more I realized this is not ideal for maintenance, which is what lead to creating own plugin.
