@@ -30,12 +30,17 @@ void FLeaDevelopSentryModule::StartupModule()
         return;
     }
     
-    UE_LOG(LogLeaDevelopSentry, Log, TEXT("Module starting up"));
-    
-    SetCustomCrashTags();
-    
-    WorldInitializedDelegate = FWorldDelegates::OnPostWorldInitialization.AddLambda(
-        [this](UWorld* World, const UWorld::InitializationValues IVS)
+    // Initialize crash tester
+    FLeaDevelopCrashTester::InitializeFromCommandLine();
+
+    // TODO This is not optimal solution, follow UE conventions, delegate or research other options
+    // Set global tags early for crashes using AsyncTask
+    AsyncTask(ENamedThreads::GameThread, []()
+    {
+        FPlatformProcess::Sleep(1.0f);
+        
+        USentrySubsystem* Sentry = GEngine->GetEngineSubsystem<USentrySubsystem>();
+        if (Sentry && Sentry->IsEnabled())
         {
             // Skips during in-editor cooking
             if (!World || GIsCookerLoadingPackage)

@@ -21,19 +21,8 @@ Extends the Sentry Unreal plugin with enhanced crash reporting and custom tag pr
 
 > **Disclaimer**: Use at your own risk. No guarantees of accuracy, reliability, or suitability. Review and test before implementation into production or other environments of your project/s.
 
----
-
-## Status
-
-- ✅ Release v1.4.0 tested on UE 5.6.1
-- ✅ Compatible with Sentry SDK v1.2.0, v1.3.0, v1.4.0
-- 🔄 UE 5.7.1 testing in progress
-- 📦 Focuses on Unreal Crash Reporter 
-  - Sentry Native SDK integration is currently not primary focus, I confirmed it's working for all automated unattended crashes and will potentially re-add that at later time again.
-
-I see downloads but no stars — is anyone out there? 👀 A star, some [feedback](https://github.com/LeaDevelop/leadevelop-sentry-unreal/discussions/6), a friendly wave, any sign of life helps me keep 😎 maintaining the repo. 
-
----
+This plugin extends and overrides the default Sentry plugin configuration for Unreal Engine projects, providing enhanced crash reporting and analytics capabilities with custom LeaDevelop features.
+I'll update to latest sentry unreal version in second half of January 2026, unless one of my weekends frees up.
 
 ## Features
 
@@ -76,20 +65,13 @@ Automatically promotes Unreal Crash Reporter metadata to Sentry tags for easier 
 
 ## Installation
 
-### 1. Install the Plugin
-1. Download and extract the plugin package
-2. Copy `LeaDevelopSentry` folder to `YourProject/Plugins/`
-3. Regenerate project files
-
-### 2. Enable the Plugin
-1. Open project in Unreal Editor
-2. **Edit > Plugins** > Search "LeaDevelop Sentry"
-3. Check **Enabled** and restart
-
-### 3. Configure Settings
-1. **Edit > Project Settings**
-2. Navigate to **Plugins > Sentry - LeaDevelop Enhancements**
-3. Enable/disable tags as needed
+1. Place the plugin folder in your project's `Plugins` directory
+2. Enable the plugin in your project's `.uproject` file or through the Plugin Manager
+3. Update GameInstance.cpp or skip this part if you use auto enabling of SDK (official docs will clarify this one for you)
+4. Regenerate project files
+5. Build your project
+   
+## Plugin Structure
 
 All tags are enabled by default.
 
