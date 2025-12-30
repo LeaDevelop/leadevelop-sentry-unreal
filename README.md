@@ -31,7 +31,7 @@ Extends the Sentry Unreal plugin with enhanced crash reporting and custom tag pr
 - 📦 Focuses on Unreal Crash Reporter 
   - Sentry Native SDK integration is currently not primary focus, I confirmed it's working for all automated unattended crashes and will potentially re-add that at later time again.
 
-I see downloads but no stars — is anyone out there? 👀 A star, some feedback (@LeaDevelop on Bluesky or hire at leadevelop.net), a friendly wave, any sign of life helps me keep 😎 maintaining the repo. 
+I see downloads but no stars — is anyone out there? 👀 A star, some [feedback](https://github.com/LeaDevelop/leadevelop-sentry-unreal/discussions/6), a friendly wave, any sign of life helps me keep 😎 maintaining the repo. 
 
 ---
 
