@@ -1,9 +1,9 @@
-﻿{
+{
   "FileVersion": 3,
   "Version": 1,
-  "VersionName": "1.1.0",
-  "FriendlyName": "LeaDevelop Sentry Extensions",
-  "Description": "LeaDevelop custom overrides for sentry-unreal implementation",
+  "VersionName": "1.4.0",
+  "FriendlyName": "LeaDevelop Sentry Enhancements",
+  "Description": "Custom Sentry Unreal Engine project enhancements",
   "Category": "Code Plugins",
   "CreatedBy": "LeaDevelop",
   "CreatedByURL": "https://leadevelop.net",
@@ -42,12 +42,6 @@
       "Name": "Sentry",
       "Enabled": true,
       "Optional": false
-    }
-  ],
-  "LocalizationTargets": [
-    {
-      "Name": "LeaDevelopSentry",
-      "LoadingPolicy": "Always"
     }
   ]
 }
