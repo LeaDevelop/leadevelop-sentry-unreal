@@ -12,5 +12,10 @@ public:
 	virtual void ShutdownModule() override;
 	
 private:
-	FDelegateHandle GameStateDelegate;
+#if WITH_LEADEVELOP_SENTRY
+	void SetCustomCrashTags(const FString& LevelName = TEXT(""));
+	
+	FDelegateHandle WorldInitializedDelegate;
+	FString LastLevelName;
+#endif
 };

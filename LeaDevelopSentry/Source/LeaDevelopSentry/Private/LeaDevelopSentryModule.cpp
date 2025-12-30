@@ -1,77 +1,161 @@
 ﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
 
 #include "LeaDevelopSentryModule.h"
-#include "LeaDevelopSentryLog.h"
-#include "SentrySettings.h"
-#include "SentrySubsystem.h"
-#include "LeaDevelopBeforeSendHandler.h"
-#include "LeaDevelopCrashTester.h"
-#include "Engine/Engine.h"
-#include "Async/Async.h"
-#include "HAL/PlatformProcess.h"
+
+#if WITH_LEADEVELOP_SENTRY
 #include "LeaDevelopSentrySettings.h"
+#include "LeaDevelopSentryLog.h"
+#include "LeaDevelopCrashTester.h"
+//#include "Engine/Engine.h"
+#include "Engine/World.h"
+#include "Misc/App.h"
 #include "Misc/EngineVersion.h"
+#include "HAL/PlatformMisc.h"
+#include "GenericPlatform/GenericPlatformCrashContext.h"
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
+#include "RHI.h"
+#endif
 
 #define LOCTEXT_NAMESPACE "FLeaDevelopSentryModule"
 
 void FLeaDevelopSentryModule::StartupModule()
 {
-    //UE_LOG(LogLeaDevelopSentry, Warning, TEXT("LeaDevelopSentry module starting up"));
-    
-    // Auto-configure Sentry to use our handler
-    if (USentrySettings* SentrySettings = GetMutableDefault<USentrySettings>())
+#if WITH_LEADEVELOP_SENTRY
+    // Skips during cook / package commandlets
+    if (IsRunningCommandlet())
     {
-        SentrySettings->BeforeSendHandler = ULeaDevelopBeforeSendHandler::StaticClass();
-        SentrySettings->SaveConfig();
-        UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Set BeforeSend handler: %s"), 
-            SentrySettings->BeforeSendHandler ? TEXT("SUCCESS") : TEXT("FAILED"));
+        UE_LOG(LogLeaDevelopSentry, Log, TEXT("Skipping initialization (commandlet)"));
+        return;
     }
     
-    // Initialize crash tester
-    FLeaDevelopCrashTester::InitializeFromCommandLine();
-
-    // TODO Follow best UE conventions and delegates, this option is not optimal
-    // Set global tags early for crashes using AsyncTask
-    AsyncTask(ENamedThreads::GameThread, []()
-    {
-        FPlatformProcess::Sleep(1.0f);
-        
-        USentrySubsystem* Sentry = GEngine->GetEngineSubsystem<USentrySubsystem>();
-        if (Sentry && Sentry->IsEnabled())
-        {
-            const ULeaDevelopSentrySettings* Settings = GetDefault<ULeaDevelopSentrySettings>();
-            if (Settings)
-            {
-                Settings->ApplyCustomTags(Sentry);
-                UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Applied startup global tags"));
-            }
-        }
-    });
+    UE_LOG(LogLeaDevelopSentry, Log, TEXT("Module starting up"));
     
-    // Add breadcrumb on game state changes
-    GameStateDelegate = FCoreDelegates::GameStateClassChanged.AddLambda([](const FString& GameState)
-    {
-        USentrySubsystem* Sentry = GEngine->GetEngineSubsystem<USentrySubsystem>();
-        if (Sentry && Sentry->IsEnabled())
+    SetCustomCrashTags();
+    
+    WorldInitializedDelegate = FWorldDelegates::OnPostWorldInitialization.AddLambda(
+        [this](UWorld* World, const UWorld::InitializationValues IVS)
         {
-            TMap<FString, FSentryVariant> Data;
-            Data.Add(TEXT("Changelist"), FString::FromInt(FEngineVersion::Current().GetChangelist()));
-            Data.Add(TEXT("Engine Version"), FEngineVersion::Current().ToString(EVersionComponent::Patch));
-            Data.Add(TEXT("Game State"), GameState);
-            
-            Sentry->AddBreadcrumbWithParams(TEXT("LeaDevelop Info"), TEXT("System"), TEXT("Info"), Data, ESentryLevel::Info);
-        }
-    });
+            // Skips during in-editor cooking
+            if (!World || GIsCookerLoadingPackage)
+            {
+                return;
+            }
+
+            FString LevelName = World->GetMapName();
+            LevelName.RemoveFromStart(World->StreamingLevelsPrefix);
+			
+            if (LastLevelName != LevelName)
+            {
+                LastLevelName = LevelName;
+                SetCustomCrashTags(LevelName);
+            }
+        });
+
+#if !UE_BUILD_SHIPPING
+    FLeaDevelopCrashTester::InitializeFromCommandLine();
+#endif
+#endif
 }
 
 void FLeaDevelopSentryModule::ShutdownModule()
 {
-    if (GameStateDelegate.IsValid())
+#if WITH_LEADEVELOP_SENTRY
+    if (WorldInitializedDelegate.IsValid())
     {
-        FCoreDelegates::GameStateClassChanged.Remove(GameStateDelegate);
+        FWorldDelegates::OnPostWorldInitialization.Remove(WorldInitializedDelegate);
     }
-    //UE_LOG(LogLeaDevelopSentry, Log, TEXT("LeaDevelopSentry module shutting down"));
+	
+    UE_LOG(LogLeaDevelopSentry, Log, TEXT("Module shutting down"));
+#endif
 }
+
+#if WITH_LEADEVELOP_SENTRY
+void FLeaDevelopSentryModule::SetCustomCrashTags(const FString& LevelName)
+{
+    const ULeaDevelopSentrySettings* Settings = GetDefault<ULeaDevelopSentrySettings>();
+    if (!Settings)
+    {
+        return;
+    }
+    
+    TSharedPtr<FJsonObject> Config = MakeShareable(new FJsonObject);
+    TSharedPtr<FJsonObject> Tags = MakeShareable(new FJsonObject);
+    
+    if (Settings->bPromoteChangelist)
+    {
+        Tags->SetStringField(TEXT("Changelist"),
+            FString::FromInt(FEngineVersion::Current().GetChangelist()));
+    }
+
+    if (Settings->bPromoteEngineVersion)
+    {
+        Tags->SetStringField(TEXT("EngineVersion"),
+            FEngineVersion::Current().ToString(EVersionComponent::Patch));
+    }
+    
+    if (Settings->bPromoteLevelName && !LevelName.IsEmpty())
+    {
+        Tags->SetStringField(TEXT("Map"), LevelName);
+    }
+
+    if (Settings->bPromoteGameName)
+    {
+        Tags->SetStringField(TEXT("GameName"), FApp::GetProjectName());
+    }
+
+    if (Settings->bPromoteBuildConfiguration)
+    {
+        FString BuildConfig;
+#if UE_BUILD_DEBUG
+        BuildConfig = TEXT("Debug");
+#elif UE_BUILD_DEVELOPMENT
+        BuildConfig = TEXT("Development");
+#elif UE_BUILD_TEST
+        BuildConfig = TEXT("Test");
+#elif UE_BUILD_SHIPPING
+        BuildConfig = TEXT("Shipping");
+#else
+        BuildConfig = TEXT("Unknown");
+#endif
+        Tags->SetStringField(TEXT("BuildConfig"), BuildConfig);
+    }
+
+    if (Settings->bPromoteEngineMode)
+    {
+        Tags->SetStringField(TEXT("EngineMode"), GIsEditor ? TEXT("Editor") : TEXT("Game"));
+    }
+
+    if (Settings->bPromotePlatform)
+    {
+        Tags->SetStringField(TEXT("Platform"), FPlatformProperties::PlatformName());
+    }
+
+    if (Settings->bPromoteCPUBrand)
+    {
+        Tags->SetStringField(TEXT("CPUBrand"), FPlatformMisc::GetCPUBrand());
+    }
+    
+    if (Settings->bPromoteGPUBrand)
+    {
+        Tags->SetStringField(TEXT("GPUBrand"), GRHIAdapterName);
+    }
+
+    if (Settings->bPromoteGPUDriverVersion)
+    {
+        Tags->SetStringField(TEXT("GPUDriverVersion"), GRHIAdapterUserDriverVersion);
+    }
+    
+    Config->SetObjectField(TEXT("tags"), Tags);
+
+    FString JsonConfig;
+    TSharedRef<TJsonWriter<>> JsonWriter = TJsonWriterFactory<>::Create(&JsonConfig);
+    FJsonSerializer::Serialize(Config.ToSharedRef(), JsonWriter);
+
+    FGenericCrashContext::SetGameData(TEXT("__sentry"), JsonConfig);
+}
+#endif
 
 #undef LOCTEXT_NAMESPACE
     

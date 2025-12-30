@@ -1,301 +1,202 @@
 **Status update** 
-- release version on the way for unreal crash reporter, currently tests on 5.6.1 passed and will also test on 5.7.1. 
-  - If there is any interest either expressed directly or via stars I'll continue expand else I'll public archive the version after March 2026.
+- release version on the way for unreal crash reporter on Unreal Engine version 5.7.1. 
+  - If there is any interest either expressed directly or via stars I'll continue expand else I'll public archive the version after December 2026.
 - pre-release versions are functional but not optimal. Initial development focused on getting it working and me getting better understanding; future versions will follow UE conventions better 🤞🤓
+  - I'll expand existing blog post with key takeaways ETA February 2026 if not earlier.
 
 
 # LeaDevelop sentry-unreal enhancements - UE plugin
 
-During summer 2025 I was exploring the source of the Sentry Unreal plugin and started adding custom tags to my self-hosted instance where I'm experimenting and prototyping different options. I started by editing a Sentry's subsystem but the more I changed, the more I realized this is not ideal for maintenance, which is what lead to creating own plugin.
+I started looking into custom attributes in early spring and continue the journey during summer 2025 when I explored the source of the Sentry Unreal plugin and started adding custom tags to my self-hosted instance where I'm experimenting and prototyping different options. I started by editing a Sentry's subsystem but the more I changed, the more I realized this is not ideal for maintenance, which is what lead to creating seperate plugin. 
+
+My C++ experience is limisted as my previous work rarely required it but I'm learning through building. This project has helped me dive into UE subsystems, modules, and plugins. I'm now at a point where I consider the plugin production-ready (release v1.4.0 for 5.6.1 on the way), though pre-release versions used suboptimal approaches.
 
 > **Disclaimer**: The use of code, scripts, or shared content is solely at your own risk. I do not guarantee its accuracy, reliability, or suitability for your specific needs. No responsibility is taken for any damages or losses that may result from its use. It is recommended that you carefully review and test the content before implementation!
 
 ---
 
-# LeaDevelop Sentry Plugin Enhancements
+# LeaDevelop Sentry Enhancements - Unreal Engine Plugin
 
-This plugin extends the default Sentry plugin for Unreal Engine projects, providing enhanced crash reporting and analytics capabilities with custom LeaDevelop features.
-Update to latest sentry unreal plugin version expected in second half of January, unless I get one of my weekends freed up :)
-TODOs are noting what I'll improve next or what to keep an eye on.
+Extends the Sentry Unreal plugin with enhanced crash reporting and custom tag promotion.
+
+> **Disclaimer**: Use at your own risk. No guarantees of accuracy, reliability, or suitability. Review and test before implementation into production or other environments of your project/s.
+
+---
+
+## Status
+
+- ✅ Release v1.4.0 tested on UE 5.6.1
+- ✅ Compatible with Sentry SDK v1.2.0, v1.3.0, v1.4.0
+- 🔄 UE 5.7.1 testing in progress
+- 📦 Focuses on Unreal Crash Reporter 
+  - Sentry Native SDK integration is currently not primary focus, I confirmed it's working for all automated unattended crashes and will potentially re-add that at later time again.
+
+I see downloads but no stars — is anyone out there? 👀 A star, some feedback (@LeaDevelop on Bluesky or hire at leadevelop.net), a friendly wave, any sign of life helps me keep 😎 maintaining the repo. 
+
+---
 
 ## Features
 
-- **Enhanced Tag Promotion**: Automatically promotes changelist, engine version, and level name information to Sentry tags
-    - Unpublished tags in this project but sharing for awareness and ideas you can incorporate: Steam ID, player nicknames (both Steam and EGS), capturing nicknames in early development via different approaches depending on studio setup. Enables engineers to search for crashes by human-readable names.
-    - World Context Tracking: Tags whether UE developer crashed in Editor, PIE, or Game mode (currently disabled)
-- **Automatic Breadcrumb Tracking**: Enhanced breadcrumbs for map loading events and world initialization
-- **Configurable Settings**: Easy-to-configure settings that extend Sentry defaults
-- **Crash Testing**: Built-in command-line crash tester for validating your Sentry integration
+### Custom tag promotion
+Automatically promotes Unreal Crash Reporter metadata to Sentry tags for easier filtering:
+
+| Tag | Description |
+|-----|-------------|
+| `Changelist` | UE changelist number |
+| `EngineVersion` | UE version (e.g., 5.6.1) |
+| `Map` | Current level/map name |
+| `GameName` | Project name |
+| `BuildConfig` | Debug/Development/Test/Shipping |
+| `EngineMode` | Editor/Game |
+| `Platform` | Platform name (e.g., Windows) |
+| `CPUBrand` | Processor name |
+| `GPUBrand` | Graphics card name |
+| `GPUDriverVersion` | Graphics driver version |
+
+### Additional features
+- **Configurable Settings**: Enable/disable each tag in Project Settings
+- **Level change tracking**: Tags update automatically on map transitions
+- **Crash Tester**: Built-in command-line crash testing for validation of crash pipeline and enabling the filter out intended crashes
+- **Minimal Performance Impact**: Tags set only at startup and level changes
+
+### Future ideas (not yet implemented)
+- Steam ID / Player nickname tagging
+- Sentry Native SDK integration
+- Additional platform support
+
+---
 
 ## Requirements
 
-- Unreal Engine 5.6.1 or later (high chance it works with 5.5 didn't have time to validate yet, try at your own risk!)
-- Sentry Unreal Engine SDK plugin (available on Epic Marketplace)
+- Unreal Engine 5.6.1+
+- Sentry Unreal SDK plugin
 - Windows 64-bit (additional platforms can be configured)
 
-## Installation (this flow changes in release version that is on the way in next days)
+---
 
-### 1. Install the Plugin Files
+## Installation
+
+### 1. Install the Plugin
 1. Download and extract the plugin package
-2. Copy the `LeaDevelopSentry` folder to your project's `Plugins` directory
-    - If the `Plugins` folder doesn't exist, create it in your project root
-    - Path should be: `YourProject/Plugins/LeaDevelopSentry/`
-3. **Do NOT enable the plugin yet**
+2. Copy `LeaDevelopSentry` folder to `YourProject/Plugins/`
+3. Regenerate project files
 
-### 2. Configure Your Game Instance or use auto enable SDK option
+### 2. Enable the Plugin
+1. Open project in Unreal Editor
+2. **Edit > Plugins** > Search "LeaDevelop Sentry"
+3. Check **Enabled** and restart
 
-You have to choose which way you'll use it. I advise reading through official documentaition and you try things around.
+### 3. Configure Settings
+1. **Edit > Project Settings**
+2. Navigate to **Plugins > Sentry - LeaDevelop Enhancements**
+3. Enable/disable tags as needed
 
-You need to set up the Sentry integration in your project's GameInstance class **before enabling the plugin**.
+All tags are enabled by default.
 
-#### If you already have a custom GameInstance:
-
-Add the following to your **GameInstance.h**:
-```cpp
-#include "CoreMinimal.h"
-#include "Engine/GameInstance.h"
-#include "YourGameInstance.generated.h"
-
-UCLASS()
-class YOURPROJECT_API UYourGameInstance : public UGameInstance
-{
-    GENERATED_BODY()
-
-public:
-    virtual void Init() override;
-
-private:
-	UPROPERTY()
-	FTimerHandle SentryTagsTimerHandle;    
-};
+### 4. Verify Installation
+Check **Output Log** for:
+```
+LogLeaDevelopSentry: Log: Module starting up
 ```
 
-Add the following to your **GameInstance.cpp**:
-```cpp
-#include "YourGameInstance.h"
-#include "SentrySubsystem.h"
-#include "SentrySettings.h"
-#include "LeaDevelopBeforeSendHandler.h"
+---
 
-void UYourGameInstance::Init()
-{
-    Super::Init();
-    
-    // Configure Sentry to use LeaDevelop's custom handler
-    if (USentrySettings* Settings = GetMutableDefault<USentrySettings>())
-    {
-        Settings->BeforeSendHandler = ULeaDevelopBeforeSendHandler::StaticClass();
-    }
-    
-    // Test event
-    FTimerHandle TestTimer;
-    GetTimerManager().SetTimer(TestTimer, []()
-    {
-        if (USentrySubsystem* Sentry = GEngine->GetEngineSubsystem<USentrySubsystem>())
-        {
-            Sentry->CaptureMessage(TEXT("Test tags"), ESentryLevel::Warning);
-        }
-    }, 3.0f, false);
-}
-```
+## Crash Testing
 
-#### If you don't have a custom GameInstance yet:
+Test your Sentry integration with a controlled crash.
 
-1. Create **YourGameInstance.h** in your project's `Source/YourProject/` folder (replace `YourProject` with your actual project name)
-2. Create **YourGameInstance.cpp** in the same folder
-3. Use the code examples above, replacing `YOURPROJECT_API` with your project's API macro
-
-Then:
-
-3. **Set the GameInstance in Project Settings:**
-    - Open your project in Unreal Editor
-    - Go to **Edit > Project Settings**
-    - Navigate to **Maps & Modes**
-    - Under **Game Instance**, select your custom **YourGameInstance** class
-    - Save and close the editor
-
-### 3. Update Build Configuration
-
-Add the plugin dependencies to your project's **Build.cs** file:
-```csharp
-PublicDependencyModuleNames.AddRange(new string[]
-{
-    "Core", 
-    "CoreUObject", 
-    "Engine",
-    "Sentry"  // Add this if not already present
-});
-
-PrivateDependencyModuleNames.AddRange(new string[]
-{
-    "LeaDevelopSentry"  // Add this
-});
-```
-
-### 4. Regenerate Project Files
-
-1. **Close Unreal Editor completely**
-2. Right-click your `.uproject` file
-3. Select **Generate Visual Studio project files**
-
-### 5. Enable the Plugin
-
-1. Open your project in Unreal Engine
-2. Go to **Edit > Plugins**
-3. Search for "LeaDevelop Sentry"
-4. Check the **Enabled** checkbox
-5. Click **Restart Now** when prompted
-
-### 6. Build Your Project
-
-1. After restart, the editor may prompt you to rebuild
-2. Click **Yes** to build
-3. Alternatively, build from your IDE:
-    - Open the `.sln` file (Visual Studio) or `.uproject` (Rider/other IDEs)
-    - **Build > Build Solution**
-4. Launch your project
-
-### 7. Configure Plugin Settings
-
-1. In Unreal Editor, go to **Edit > Project Settings**
-2. Navigate to **Plugins > LeaDevelop Sentry**
-3. Configure which tags you want to promote:
-    - **Promote Changelist**: Include engine changelist in events
-    - **Promote Engine Version**: Include engine version in events
-    - **Promote Level Name**: Include current level name in events
-
-<img width="631" height="108" alt="LeaDevelop_sentry-custom-tags" src="https://github.com/user-attachments/assets/f663372c-9e14-4087-ac00-ffca4d01e4de" />
-
-### 8. Configure Sentry SDK Settings
-
-1. Go to **Edit > Project Settings**
-2. Navigate to **Plugins > Sentry**
-3. Configure your Sentry DSN and other settings
-4. The LeaDevelop Sentry handler will automatically be applied
-
-## Testing the Installation
-
-To verify the plugin is working:
-
-1. Launch your project in the editor
-2. Check the **Output Log** for messages like:
-```
-   LogTemp: Warning: LeaDevelopSentry module starting up
-   LogTemp: Warning: Set BeforeSend handler: SUCCESS
-   LogTemp: Warning: Applied startup global tags
-```
-
-3. To test crash reporting in a packaged build using the command line:
+**In a Development packaged build:**
 ```cmd
-   YourGame.exe -CrashMe=5
+YourGame.exe -CrashMe=10
 ```
-This will trigger a test crash after 5 seconds. Check your Sentry dashboard to verify the crash was captured with custom tags.
 
-<img width="1288" height="140" alt="Sentry Dashboard Example" src="https://github.com/user-attachments/assets/6f56fd0c-4748-4655-b1d5-25244b430795" />
+Triggers a crash after 10 seconds. Verify custom tags appear in your Sentry dashboard.
+
+> **Note:** Crash tester is disabled in Shipping builds.
+
+---
 
 ## Plugin Structure
 ```
 Plugins/LeaDevelopSentry/
-├── LeaDevelopSentry.uplugin                      # Plugin descriptor
+├── LeaDevelopSentry.uplugin
 ├── Source/
 │   └── LeaDevelopSentry/
-│       ├── LeaDevelopSentry.Build.cs             # Build configuration
+│       ├── LeaDevelopSentry.Build.cs
 │       ├── Public/
-│       │   ├── LeaDevelopSentryModule.h          # Main module header
-│       │   ├── LeaDevelopSentrySettings.h        # Configuration class header
-│       │   ├── LeaDevelopBeforeSendHandler.h     # Event filter header
-│       │   └── LeaDevelopCrashTester.h           # Crash testing utility header
+│       │   ├── LeaDevelopSentryModule.h
+│       │   ├── LeaDevelopSentrySettings.h
+│       │   ├── LeaDevelopSentryLog.h
+│       │   └── LeaDevelopCrashTester.h
 │       └── Private/
-│           ├── LeaDevelopSentryModule.cpp        # Main module implementation
-│           ├── LeaDevelopSentrySettings.cpp      # Configuration class
-│           ├── LeaDevelopBeforeSendHandler.cpp   # Event filter implementation
-│           └── LeaDevelopCrashTester.cpp         # Crash testing utility
+│           ├── LeaDevelopSentryModule.cpp
+│           ├── LeaDevelopSentrySettings.cpp
+│           ├── LeaDevelopSentryLog.cpp
+│           └── LeaDevelopCrashTester.cpp
 ```
 
-## Enhanced Features
+---
 
-### Automatic Tag Promotion
+## How it works
 
-The plugin automatically adds custom tags to every Sentry event:
-- **LevelName**: Current map/level name (e.g., `Lvl_Default`)
-- **Changelist**: Engine changelist number (e.g., `123456`)
-- **EngineVersion**: Unreal Engine version (e.g., `5.6.1`)
+The plugin uses `FGenericCrashContext::SetGameData` to inject custom tags into the Unreal Crash Reporter context. This follows the [official Sentry documentation](https://docs.sentry.io/platforms/unreal/configuration/setup-crashreporter/) for crash reporter configuration.
 
-These tags make it easier to:
-- Filter crashes by specific maps/levels
-- Track issues across different engine versions
-- Correlate crashes with specific builds
+Tags are set:
+1. Once at module startup
+2. On each level change
 
-### Automatic Breadcrumbs
+No per-frame operations. Minimal performance impact.
 
-Enhanced breadcrumb tracking for debugging:
-- PreLoadMap events with formatted map names
-- PostLoadMapWithWorld events with world context
-- World initialization with change detection
-- Game state changes with engine metadata
-
-### Crash Testing
-
-Built-in command-line crash tester for validation:
-```cmd
-YourGame.exe -CrashMe=5
-```
-Triggers a controlled crash after the specified delay (in seconds) to test your Sentry integration.
-
-## Dependencies
-
-- Sentry plugin (automatically loaded as dependency)
-- Core Unreal Engine modules (Core, CoreUObject, Engine)
-
-## Usage Notes
-
-1. The plugin automatically applies enhancements on startup
-2. It extends the original Sentry plugin's configuration without replacing it
-3. All custom tags are applied both to real-time events and crash reports
-4. Level name formatting preserves your custom mappings and prefixes
-5. The BeforeSend handler runs for every event, allowing you to customize event data before sending
+---
 
 ## Troubleshooting
 
-**"LeaDevelopBeforeSendHandler not found" error:**
-- Make sure you enabled the plugin AFTER creating the GameInstance files
-- Verify `LeaDevelopSentry` is added to your Build.cs `PrivateDependencyModuleNames`
-- Regenerate project files and rebuild
-
 **Plugin doesn't appear in Plugin Manager:**
-- Verify the plugin is in `YourProject/Plugins/LeaDevelopSentry/`
-- Check that `LeaDevelopSentry.uplugin` exists in the plugin folder
+- Verify plugin is in `YourProject/Plugins/LeaDevelopSentry/`
+- Check `LeaDevelopSentry.uplugin` exists
 - Restart the editor
 
-**Build errors:**
-- Ensure you've added the dependencies to your Build.cs file
-- Regenerate project files after making changes
-- Clean and rebuild (delete `Binaries/`, `Intermediate/`, and `Saved/` folders)
-
 **Tags not appearing in Sentry:**
-- Verify the plugin settings are enabled in **Project Settings > Plugins > LeaDevelop Sentry**
-- Check that your GameInstance properly sets the BeforeSend handler
-- Ensure the Sentry SDK plugin is also installed and configured with a valid DSN
-- Check the Output Log for "Applied global tags" messages
+- Verify settings enabled in **Project Settings > Plugins > Sentry - LeaDevelop Enhancements**
+- Ensure Sentry SDK is configured with valid DSN
+- Check Output Log for startup messages
 
 **Crash tester not working:**
-- Only works in packaged builds (Shipping and Development configurations)
-- Disabled in editor builds for safety
-- Requires the `-CrashMe=X` command-line parameter (where X is delay in seconds)
+- Only works in Development packaged builds
+- Disabled in Shipping builds
+- Requires `-CrashMe=X` parameter (X = seconds delay)
 
-## Extending the Plugin
+**Build errors:**
+- Regenerate project files
+- Clean rebuild (delete `Binaries/`, `Intermediate/`, `Saved/` folders)
 
-The plugin is designed to be easily extensible for additional Sentry customizations. Key extension points:
+---
 
-- **LeaDevelopBeforeSendHandler**: Modify event data before sending to Sentry
-- **LeaDevelopSentrySettings**: Add new configurable options
-- **LeaDevelopSentryModule**: Hook into engine lifecycle events
+## Changelog
+
+### v1.4.0
+- Expanded tag promotion (GameName, BuildConfig, EngineMode, Platform, CPU, GPU)
+- Introduced `WITH_LEADEVELOP_SENTRY` preprocessor guard
+- Crash tester excluded from Shipping builds
+- Module skips initialization during cook/package commandlets
+- Removed BeforeSendHandler (now uses Crash Reporter context only)
+- Renamed internal function to `SetCustomCrashTags`
+
+### Previous Versions
+- Pre-release versions focused on initial functionality, are not production ready.
+
+---
 
 ## Resources
 
-- **Unreal Plugin Documentation**: https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine
-- **Sentry Unreal Documentation**: https://docs.sentry.io/platforms/unreal
-- **Blog Post**: [Monitor Unreal Projects in Sentry](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/)
+- [Sentry Unreal Documentation by Sentry.io](https://docs.sentry.io/platforms/unreal)
+- [Unreal Crash Reporter Setup by Sentry.io](https://docs.sentry.io/platforms/unreal/configuration/setup-crashreporter/)
+- [Unreal Plugin Documentation by Epic Games](https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine)
+- [Blog: Monitor Unreal Projects in Sentry](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/)
+- [Maintain smooth game play with Sentry's game engine support by Bruno Garcia](https://blog.sentry.io/maintain-smooth-game-play-with-sentrys-game-engine-support/)
+- [Unreal Engine crash reporting now available on gaming consoles with trace-connected logs by Ivan Tustanivskyi, Steve Zegalia](https://blog.sentry.io/unreal-engine-crash-reporting-now-available-on-gaming-consoles/)
+
+---
 
 ## License
 

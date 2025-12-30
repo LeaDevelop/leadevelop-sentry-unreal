@@ -11,5 +11,4 @@ public:
 
 private:
     static void ExecuteCrashTest();
-    static int32 CrashType;
 };
