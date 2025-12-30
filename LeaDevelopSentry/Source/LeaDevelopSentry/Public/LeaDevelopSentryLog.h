@@ -1,4 +1,5 @@
 ﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
+
 #pragma once
 
 #include "CoreMinimal.h"

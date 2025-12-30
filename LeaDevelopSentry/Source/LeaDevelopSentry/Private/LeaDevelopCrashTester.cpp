@@ -1,18 +1,17 @@
 ﻿// Copyright (c) 2025 LeaDevelop. All Rights Reserved.
 
 #include "LeaDevelopCrashTester.h"
+
+#if !UE_BUILD_SHIPPING
 #include "LeaDevelopSentryLog.h"
 #include "Async/Async.h"
 #include "Misc/CommandLine.h"
 #include "Misc/Parse.h"
 #include "HAL/PlatformProcess.h"
-
-// Static members
-int32 FLeaDevelopCrashTester::CrashType = 0;
+#endif
 
 void FLeaDevelopCrashTester::InitializeFromCommandLine()
 {
-// TODO introduce WITH_SENTRY_TESTING
 #if !UE_BUILD_SHIPPING
    FString CrashMeValue;
    if (FParse::Value(FCommandLine::Get(), TEXT("CrashMe="), CrashMeValue))
@@ -21,7 +20,7 @@ void FLeaDevelopCrashTester::InitializeFromCommandLine()
        
       if (DelaySeconds > 0)
       {
-         UE_LOG(LogLeaDevelopSentry, Warning, TEXT("LeaDevelop: Crash test scheduled in %d seconds"), DelaySeconds);
+         UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Crash test scheduled in %d seconds"), DelaySeconds);
           
          AsyncTask(ENamedThreads::AnyBackgroundThreadNormalTask, [DelaySeconds]()
          {
@@ -36,7 +35,8 @@ void FLeaDevelopCrashTester::InitializeFromCommandLine()
 void FLeaDevelopCrashTester::ExecuteCrashTest()
 {
 #if !UE_BUILD_SHIPPING
-   UE_LOG(LogTemp, Fatal, TEXT("LEADEVELOP CRASH TEST EXECUTING!"));
+   UE_LOG(LogLeaDevelopSentry, Warning, TEXT("Intended manual crash executing..."));
+
    int32* NullPtr = nullptr;
    *NullPtr = 42;
 #endif
