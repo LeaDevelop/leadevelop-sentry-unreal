@@ -183,7 +183,7 @@ No per-frame operations. Minimal performance impact.
 - Renamed internal function to `SetCustomCrashTags`
 
 ### Previous Versions
-- Pre-release versions focused on initial functionality, are not production ready.
+- Pre-release versions focused on initial functionality, are not production ready. I have removed them as I'd not recommend to use them.
 
 ---
 
