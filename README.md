@@ -1,20 +1,3 @@
-**Status update** 
-- release version on the way for unreal crash reporter on Unreal Engine version 5.7.1. 
-  - If there is any interest either expressed directly or via stars I'll continue expand else I'll public archive the version after December 2026.
-- pre-release versions are functional but not optimal. Initial development focused on getting it working and me getting better understanding; future versions will follow UE conventions better 🤞🤓
-  - I'll expand existing blog post with key takeaways ETA February 2026 if not earlier.
-
-
-# LeaDevelop sentry-unreal enhancements - UE plugin
-
-I started looking into custom attributes in early spring and continue the journey during summer 2025 when I explored the source of the Sentry Unreal plugin and started adding custom tags to my self-hosted instance where I'm experimenting and prototyping different options. I started by editing a Sentry's subsystem but the more I changed, the more I realized this is not ideal for maintenance, which is what lead to creating seperate plugin. 
-
-My C++ experience is limisted as my previous work rarely required it but I'm learning through building. This project has helped me dive into UE subsystems, modules, and plugins. I'm now at a point where I consider the plugin production-ready (release v1.4.0 for 5.6.1 on the way), though pre-release versions used suboptimal approaches.
-
-> **Disclaimer**: The use of code, scripts, or shared content is solely at your own risk. I do not guarantee its accuracy, reliability, or suitability for your specific needs. No responsibility is taken for any damages or losses that may result from its use. It is recommended that you carefully review and test the content before implementation!
-
----
-
 # LeaDevelop Sentry Enhancements - Unreal Engine Plugin
 
 Extends the Sentry Unreal plugin with enhanced crash reporting and custom tag promotion.
@@ -188,11 +171,10 @@ No per-frame operations. Minimal performance impact.
 ---
 
 ## Resources
-
+- [Blog: Monitor Unreal Projects in Sentry](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/)
 - [Sentry Unreal Documentation by Sentry.io](https://docs.sentry.io/platforms/unreal)
 - [Unreal Crash Reporter Setup by Sentry.io](https://docs.sentry.io/platforms/unreal/configuration/setup-crashreporter/)
 - [Unreal Plugin Documentation by Epic Games](https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine)
-- [Blog: Monitor Unreal Projects in Sentry](https://leadevelop.net/blog/monitor-unreal-projects-in-sentry/)
 - [Maintain smooth game play with Sentry's game engine support by Bruno Garcia](https://blog.sentry.io/maintain-smooth-game-play-with-sentrys-game-engine-support/)
 - [Unreal Engine crash reporting now available on gaming consoles with trace-connected logs by Ivan Tustanivskyi, Steve Zegalia](https://blog.sentry.io/unreal-engine-crash-reporting-now-available-on-gaming-consoles/)
 
