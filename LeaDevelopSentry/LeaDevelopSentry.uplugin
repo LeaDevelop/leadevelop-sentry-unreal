@@ -1,15 +1,15 @@
 {
   "FileVersion": 3,
   "Version": 1,
-  "VersionName": "1.4.0",
+  "VersionName": "1.5.0",
   "FriendlyName": "LeaDevelop Sentry Enhancements",
   "Description": "Custom Sentry Unreal Engine project enhancements",
   "Category": "Code Plugins",
   "CreatedBy": "LeaDevelop",
   "CreatedByURL": "https://leadevelop.net",
-  "DocsURL": "/",
+  "DocsURL": "https://leadevelop.net/blog/monitor-unreal-projects-in-sentry",
   "MarketplaceURL": "/",
-  "SupportURL": "/",
+  "SupportURL": "https://github.com/LeaDevelop/leadevelop-sentry-unreal/discussions",
   "CanContainContent": false,
   "IsBetaVersion": false,
   "IsExperimentalVersion": false,
@@ -40,8 +40,7 @@
   "Plugins": [
     {
       "Name": "Sentry",
-      "Enabled": true,
-      "Optional": false
+      "Enabled": true
     }
   ]
 }
