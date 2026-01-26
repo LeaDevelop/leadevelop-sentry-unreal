@@ -8,9 +8,7 @@ Extends the Sentry Unreal plugin with enhanced crash reporting and custom tag pr
 
 ## Status
 
-- ✅ Release v1.4.0 tested on UE 5.6.1
-- ✅ Compatible with Sentry SDK v1.2.0, v1.3.0, v1.4.0
-- 🔄 UE 5.7.1 testing in progress
+- ✅ Compatible with Sentry SDK `v1.2.*`, `v1.3.*`, `v1.4.*`, `v1.5.0`
 - 📦 Focuses on Unreal Crash Reporter 
   - Sentry Native SDK integration is currently not primary focus, I confirmed it's working for all automated unattended crashes and will potentially re-add that at later time again.
 
@@ -90,7 +88,7 @@ Test your Sentry integration with a controlled crash.
 
 **In a Development packaged build:**
 ```cmd
-YourGame.exe -CrashMe=10
+-CrashMe=20 -log -ResX=1280 -ResY=720 -WINDOWED
 ```
 
 Triggers a crash after 10 seconds. Verify custom tags appear in your Sentry dashboard.
