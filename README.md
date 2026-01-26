@@ -7,7 +7,7 @@ Extends the Sentry Unreal plugin with enhanced crash reporting and custom tag pr
 ---
 
 ## Status
-
+- ℹ️ Updates which confirm that version works with latest Unreal Engine and Sentry versions will be arriving first weekend after their releases, in case my mind is occupied on other projects, poke me in discussions or discord. 😁
 - ✅ Compatible with Sentry SDK `v1.2.*`, `v1.3.*`, `v1.4.*`, `v1.5.0`
 - 📦 Focuses on Unreal Crash Reporter 
   - Sentry Native SDK integration is currently not primary focus, I confirmed it's working for all automated unattended crashes and will potentially re-add that at later time again.
